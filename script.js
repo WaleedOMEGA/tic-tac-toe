@@ -19,6 +19,9 @@ const pointsDivider = document.querySelector('.points-divider');
 const boxes = document.querySelector('.boxes');
 const winMessage = document.querySelector('.win-message');
 const loseMessage = document.querySelector('.lose-message');
+const playerOneTurn = document.querySelector('.player-one-turn');
+const playerTwoTurn = document.querySelector('.player-two-turn');
+const drawMessage = document.querySelector('.draw-message');
 var MYAPP = MYAPP || {
     gameInPlay: false,
     winCombos: [
@@ -68,6 +71,17 @@ var MYAPP = MYAPP || {
     }
   };
   // general functions
+  // animate function
+function animateHide(item, time) {
+  var animateEffect = setInterval(function () {
+    if (item.style.top < 0) {
+      item.style.top += 5;
+    } else {
+      item.style.top = 0;
+      clearInterval(animateEffect);
+    }
+  }, time);
+  }
   // fadeOut
 function fadeOutEffect(item, time) {
     var fadeEffect = setInterval(function () {
@@ -145,8 +159,8 @@ function fadeInEffect(item, time) {
     $('.player-one-turn').animate({'top': '-45px'}, 500);
   },
   
-    hidePlayerOnePrompt: function() {
-    $('.player-one-turn').animate({'top': '0'}, 500);
+    hidePlayerOnePrompt: function () {
+      animateHide(playerOneTurn, 100);
   },
   
     showPlayerTwoPrompt: function() {
@@ -160,13 +174,14 @@ function fadeInEffect(item, time) {
   },
   
     hidePlayerTwoPrompt: function() {
-    $('.player-two-turn').animate({'top': '0'}, 500);
+    animateHide(playerTwoTurn, 100);
   },
   
     showDrawMessage: function() {
+      
     MYAPP.timeOuts.push(
       setTimeout(function() {
-      $('.draw-message').fadeIn(500);
+        fadeInEffect(drawMessage, 50);
     }, 1500));
   },
   
