@@ -21,6 +21,8 @@ const winMessage = document.querySelector('.win-message');
 const loseMessage = document.querySelector('.lose-message');
 const playerOneTurn = document.querySelector('.player-one-turn');
 const playerTwoTurn = document.querySelector('.player-two-turn');
+const playerOneTurnP = document.querySelector('.player-one-turn p');
+const playerTwoTurnP = document.querySelector('.player-two-turn p');
 const drawMessage = document.querySelector('.draw-message');
 var MYAPP = MYAPP || {
     gameInPlay: false,
@@ -74,10 +76,30 @@ var MYAPP = MYAPP || {
   // animate function
 function animateHide(item, time) {
   var animateEffect = setInterval(function () {
+    
     if (item.style.top < 0) {
       item.style.top += 5;
+      
     } else {
+
       item.style.top = 0;
+      clearInterval(animateEffect);
+    }
+  }, time);
+}
+function animateShow(item, time) {
+  
+  var top = 0;
+  // var top = item.style.top;
+  // top = top.slice(0,top.length-2);
+  // console.log(top);
+    var animateEffect = setInterval(function () {
+    // console.log('animateshow',item.style.top);
+    if (top >= -45) {
+      top -= 5;
+      item.style.top=top+"px"
+    } else {
+      item.style.top = -45 +"px";
       clearInterval(animateEffect);
     }
   }, time);
@@ -149,31 +171,42 @@ function fadeInEffect(item, time) {
     
   },
   
-    showPlayerOnePrompt: function() {
-    if (MYAPP.secondPlayer) {
-      $('.player-one-turn p').text('Go Player 1!');
+    showPlayerOnePrompt: function () {
+      
+      if (MYAPP.secondPlayer) {
+        playerOneTurnP.innerText = 'Go Player 1!';
+      
     }
     else {
-      $('.player-one-turn p').text('Your turn!');
-    }
-    $('.player-one-turn').animate({'top': '-45px'}, 500);
+        playerOneTurnP.innerText = 'Your turn!';
+     
+      }
+      animateShow(playerOneTurn, 50);
+    
   },
   
     hidePlayerOnePrompt: function () {
+     
       animateHide(playerOneTurn, 100);
   },
   
-    showPlayerTwoPrompt: function() {
-    if (MYAPP.secondPlayer) {
-      $('.player-two-turn p').text('Go Player 2!');
+    showPlayerTwoPrompt: function () {
+      
+      if (MYAPP.secondPlayer) {
+        playerTwoTurnP.innerText = 'Go Player 2!';
+     
     }
-    else {
-      $('.player-two-turn p').text('Computer\'s turn');
-    }
-    $('.player-two-turn').animate({'top': '-45px'}, 500);
+      else {
+         playerTwoTurnP.innerText = 'Computer\'s turn';
+      
+      }
+      
+      animateShow(playerTwoTurn, 50);
+    
   },
   
-    hidePlayerTwoPrompt: function() {
+    hidePlayerTwoPrompt: function () {
+      
     animateHide(playerTwoTurn, 100);
   },
   
@@ -185,8 +218,8 @@ function fadeInEffect(item, time) {
     }, 1500));
   },
   
-    hideDrawMessage: function() {
-    $('.draw-message').fadeOut(1000);
+    hideDrawMessage: function () {
+      fadeOutEffect(drawMessage, 100);
   },
   
     showLoseMessage: function() {
@@ -197,8 +230,8 @@ function fadeInEffect(item, time) {
       );
   },
   
-    hideLoseMessage: function() {
-    $('.lose-message').fadeOut(1000);
+    hideLoseMessage: function () {
+      fadeOutEffect(loseMessage, 100);
   },
   
     showWinMessage: function() {
@@ -209,8 +242,8 @@ function fadeInEffect(item, time) {
   }, 1500));
   },
   
-    hideWinMessage: function() {
-    $('.win-message').fadeOut(1000);
+    hideWinMessage: function () {
+      fadeOutEffect(winMessage, 100);
   },
   
     drawBoard: function() {
@@ -307,9 +340,9 @@ function fadeInEffect(item, time) {
       MYAPP.game.play();
     },
     play: function () {
-      const boxList = document.querySelectorAll('.boxes li');
+      MYAPP.boxList = document.querySelectorAll('.boxes li');
       MYAPP.gameInPlay = true;
-      boxList.forEach(li => {
+      MYAPP.boxList.forEach(li => {
         li.addEventListener('click', function () {
           MYAPP.game.playerTurn(this);
         });
@@ -348,13 +381,16 @@ function fadeInEffect(item, time) {
       var boxNumber;
       if (computer.computerWhichMove(MYAPP.game) && MYAPP.turn === 2) {
         boxNumber = computer.computerWhichMove(MYAPP.game);
-        var currentBox = $('.' + boxNumber).children('i');
+       
+        var currentBox = document.getElementsByClassName(boxNumber)[0].children[0];
+        
         
         var symbol = MYAPP.playerTwoSymbol;
   
         MYAPP.timeOuts.push(
-          setTimeout(function() {
-          currentBox.children('span').text(symbol);
+          setTimeout(function () {
+            
+          currentBox.children[0].innerText=symbol;
           MYAPP.game.updateSquare(boxNumber, MYAPP.playerTwoSymbol);
           MYAPP.game.endTurn(symbol);
         }, 1000));
@@ -447,11 +483,23 @@ function fadeInEffect(item, time) {
           MYAPP.display.hideDrawMessage();
           MYAPP.display.hideLoseMessage();
           MYAPP.display.hideWinMessage();
-          $('.boxes li').fadeOut();
+          
+          
+            MYAPP.boxList.forEach(li => {
+            fadeOutEffect(li,0)
+          });
+          
+          
         }, 5000),
         setTimeout(function(){
           MYAPP.display.resetSquares();
-          $('.boxes li').fadeIn();
+          
+          
+            MYAPP.boxList.forEach(li => {
+            fadeInEffect(li, 0);
+          });
+          
+          
           MYAPP.numFilledIn = 0;
         }, 6000),
       //Make sure time for next timeout is long enough
