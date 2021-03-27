@@ -90,11 +90,9 @@ function animateHide(item, time) {
 function animateShow(item, time) {
   
   var top = 0;
-  // var top = item.style.top;
-  // top = top.slice(0,top.length-2);
-  // console.log(top);
+  
     var animateEffect = setInterval(function () {
-    // console.log('animateshow',item.style.top);
+    
     if (top >= -45) {
       top -= 5;
       item.style.top=top+"px"
@@ -306,8 +304,8 @@ function fadeInEffect(item, time) {
     },
     updateScore: function(turn) {
       var currentScore = turn === 1 ? MYAPP.playerOneScore : MYAPP.playerTwoScore;
-  
-      $('.score-' + turn).children('.points').text(currentScore);
+      document.getElementsByClassName('score-' + turn)[0].children[0].innerText = currentScore;
+      
     }
   };
   
@@ -511,9 +509,14 @@ function fadeInEffect(item, time) {
         );
     },
     resetGame: function() {
-      $('#myCanvas').css('opacity', '0');
-      $('.hard-reset').fadeOut();
-      $('.points-divider, .score-1, .score-2').fadeOut();
+      canvasWrapper.style.opacity = 0;
+      
+      fadeOutEffect(hardReset, 0);
+      
+      fadeOutEffect(pointsDivider, 0);
+      fadeOutEffect(score1, 0);
+      fadeOutEffect(score2, 0);
+      
       MYAPP.playerOneScore = 0;
       MYAPP.playerTwoScore = 0;
       MYAPP.display.resetSquares();
@@ -524,7 +527,10 @@ function fadeInEffect(item, time) {
       MYAPP.timeOuts.forEach(function(timer) {
         clearTimeout(timer);
       });
-      $('.draw-message, .win-message, .lose-message').hide();
+      fadeOutEffect(drawMessage, 0);
+      fadeOutEffect(winMessage, 0);
+      fadeOutEffect(loseMessage, 0);
+      // $('.draw-message, .win-message, .lose-message').hide();
       MYAPP.display.hidePlayerOnePrompt();
       MYAPP.display.hidePlayerTwoPrompt();
       MYAPP.display.showGameChoice();
